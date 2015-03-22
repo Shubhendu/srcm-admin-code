@@ -12,6 +12,7 @@ public interface RolesDAO {
 	public Role getRoleByName(String roleName);
 //	public Role getRoleById(int id);
 	public void addUserRoleMapping(int roleId, int userId);
+	public void addSeminarUserRoleMapping(int seminarId,int roleId, int userId);
 	public void removeUser(int roleId, int userId);
 	public void deleteRole(Role role);
 	

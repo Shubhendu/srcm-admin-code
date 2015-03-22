@@ -12,23 +12,23 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import org.junit.Ignore;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name="USERS")
 @NamedQueries({
 	@NamedQuery(name="User.getAllUsers", query="SELECT users FROM User users"),
 })
+//@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
+@JsonIgnoreProperties({"roles","seminarRoleUserMapping"})
 public class User implements Serializable {
 
 	/**
@@ -60,15 +60,29 @@ public class User implements Serializable {
 	
 	
 	@ManyToMany(cascade = {CascadeType.PERSIST},mappedBy="users")
-	@JsonManagedReference
+//	@JsonManagedReference
     private Set<Role> roles = new HashSet<Role>();
 	
-	@OneToMany(mappedBy="user")
-	@	JsonManagedReference
-	private Set<SeminarUserRoleMapping> seminarRoleUserMapping;
+//	@OneToMany(mappedBy="user")
+////	@JsonBackReference
+//	private Set<SeminarUserRoleMapping> seminarRoleUserMapping;
     
 	@Transient
 	private String roleNames;
+	
+//	@ManyToOne
+//	@JoinColumn(name="seminar_id")
+//	private Seminar seminarOrig ;
+
+	
+
+//	public Seminar getSeminarOrig() {
+//		return seminarOrig;
+//	}
+//
+//	public void setSeminarOrig(Seminar seminarOrig) {
+//		this.seminarOrig = seminarOrig;
+//	}
 
 	public User() {
     }
@@ -78,7 +92,8 @@ public class User implements Serializable {
 	}
 
 	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
+		this.roles.clear();
+		this.roles.addAll(roles);
 	}
 
 	public int getId() {
@@ -129,14 +144,8 @@ public class User implements Serializable {
 		this.lastUpdatedDate = lastUpdatedDate;
 	}
 
-	public Set<SeminarUserRoleMapping> getSeminarRoleUserMapping() {
-		return seminarRoleUserMapping;
-	}
+	
 
-	public void setSeminarRoleUserMapping(
-			Set<SeminarUserRoleMapping> seminarRoleUserMapping) {
-		this.seminarRoleUserMapping = seminarRoleUserMapping;
-	}
 
 	public String getRoleNames() {
 		return roleNames;
@@ -145,6 +154,27 @@ public class User implements Serializable {
 	public void setRoleNames(String roleNames) {
 		this.roleNames = roleNames;
 	}
+	
+	@Override
+	public int hashCode() {
+		int x = 97;
+		int hashCode = x * this.getId();
+		hashCode += x * this.firstName.hashCode();
+		return hashCode;
 
+	}
+	
+	@Override
+	public boolean equals( Object obj )
+	{
+		boolean flag = false;
+		User user = ( User )obj;
+		if( user.getId() == getId() ){
+			if(user.getFirstName().equals(this.firstName)){
+				flag = true;
+			}
+		}
+		return flag;
+	}
 	
 }

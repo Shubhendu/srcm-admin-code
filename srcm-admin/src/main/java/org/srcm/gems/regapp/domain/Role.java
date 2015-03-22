@@ -17,14 +17,12 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name="ROLES")
@@ -34,7 +32,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 })
 
 //@JsonManagedReference is used to annotate the inverse side while @JsonBackReference maps the owning side of the relationship.
-
+//@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
+@JsonIgnoreProperties({"users","seminarRoleUserMapping"})
 public class Role implements Serializable {
 	
 	/**
@@ -68,20 +67,21 @@ public class Role implements Serializable {
 	joinColumns = { @JoinColumn(name = "ROLE_ID") }, 
 	inverseJoinColumns = { @JoinColumn(name = "USER_ID") }, 
 	uniqueConstraints = { @UniqueConstraint(columnNames = {"ROLE_ID", "USER_ID" }) })
-	@JsonBackReference
+//	@JsonBackReference
 	private Set<User> users = new HashSet<User>();
 	
 	
-	@OneToMany(mappedBy="role")
-	@JsonManagedReference
-	private Set<SeminarUserRoleMapping> seminarUserRoleMappings;
+//	@OneToMany(mappedBy="role")
+////	@JsonBackReference
+//	private Set<SeminarUserRoleMapping> seminarUserRoleMappings;
     
 	public Set<User> getUsers() {
 		return users;
 	}
 
 	public void setUsers(Set<User> users) {
-		this.users = users;
+		this.users.clear();
+		this.users.addAll(users);
 	}
 
 	public int getId() {
@@ -122,5 +122,27 @@ public class Role implements Serializable {
 
 	public void setLastUpdatedTimeStamp(Date lastUpdatedTimeStamp) {
 		this.lastUpdatedTimeStamp = lastUpdatedTimeStamp;
+	}
+	
+	@Override
+	public int hashCode(){
+		int x = 97;
+		int hashCode = x *this.getId();
+		hashCode+= x*this.getRoleName().hashCode();
+		return hashCode;
+		
+	}
+	
+	@Override
+	public boolean equals( Object obj )
+	{
+		boolean flag = false;
+		Role role = ( Role )obj;
+		if( role.getId() == getId() ){
+			if(role.getRoleName().equalsIgnoreCase(getRoleName())){
+				flag = true;
+			}
+		}
+		return flag;
 	}
 }

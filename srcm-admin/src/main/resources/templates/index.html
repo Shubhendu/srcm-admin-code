@@ -27,10 +27,13 @@
 	<body class="container">
 	<div >
 		<img ng-src="images/srcm-logo.gif" align="middle" style="width: 50%"/>
+		<h3 align="center" style="color: #08c;">SRCM Role Management System</h3>
+		
+    
 		
 		<!-- <input type="text" ng-model="myModel" id="firstName" name="firstName"/>
 		<h4>{{myModel}}</h4> -->
-		<tabset >
+		<tabset>
 		<tab heading="Roles">
 			<div ng-controller="roleGridController">
 			
@@ -110,9 +113,53 @@
     						tick-property="ticked">
 						</div> 
       				</div>
+      				<hr>
       				<button type="button" class="btn btn-primary" ng-click="addUserRoleMapping()">Add User Role Mapping</button>
+      				<br/>
+      				<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
       				 
       			</div>
+			   
+			    </tab>
+			    
+			    
+			    <tab heading="Seminar User Role Mapping" ng-controller="seminarUserMappingController">
+			     	<div>
+			     	<div>Select Seminar: <div     
+    						isteven-multi-select
+    						input-model="allSeminarData"
+    						output-model="selectedSeminar"
+    						button-label="name"
+    						item-label="name maker"
+    						tick-property="ticked"
+    						selection-mode="single">
+						</div> 
+      				</div>
+			     	<div>Select Role: <div     
+    						isteven-multi-select
+    						input-model="allRolesData"
+    						output-model="selectedRoles"
+    						button-label="name"
+    						item-label="name maker"
+    						tick-property="ticked"
+    						selection-mode="single">
+						</div> 
+      				</div>
+			     	<div>Select Users: <div     
+    						isteven-multi-select
+    						input-model="allUsersData"
+    						output-model="selectedUsers"
+    						button-label="name"
+    						item-label="name maker"
+    						tick-property="ticked">
+						</div> 
+      				</div>
+      				<hr>
+      				<button type="button" class="btn btn-primary" ng-click="addSeminarRoleMapping()">Add Seminar User Role Mapping</button>
+      				
+      				<br/>
+      				<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+      				 
       			</div>
 			   
 			    </tab>

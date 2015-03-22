@@ -222,7 +222,7 @@ gridApp.controller('UserModalInstanceCtrl', function ($scope, $modalInstance, $l
 	  };
 });
 
-gridApp.controller('userRoleMappingController',function($scope,$http,$log){
+gridApp.controller('userRoleMappingController',function($scope,$http,$log,$window){
 	
 	
 	
@@ -269,7 +269,9 @@ gridApp.controller('userRoleMappingController',function($scope,$http,$log){
 	  error(function(data, status, headers, config) {
 	  console.log("Failure");
 	  });
-	 
+	 $scope.alerts = [
+	                  
+	                ];
 	
 	 
 	 $scope.addUserRoleMapping = function(){
@@ -294,10 +296,11 @@ gridApp.controller('userRoleMappingController',function($scope,$http,$log){
 		 
 		 $http.post('/admin/addUserRoleMapping', JSON.stringify(inputMap)).
          success(function(result, status, headers, config) {
-        	 alert('User Role Mapping done successfully');
+        	 $scope.alerts.push({ type: 'success', msg: 'Role User Mapping completed successfullly !!' });
        	  	 console.log('Success ');
          }).
          error(function(result, status, headers, config) {
+        	 $scope.alerts.push({ type: 'danger', msg: 'Role User Mapping failed !!' });
            // called asynchronously if an error occurs
            // or server returns response with an error status.
          });
@@ -310,6 +313,145 @@ gridApp.controller('userRoleMappingController',function($scope,$http,$log){
 	$scope.toggled = function(open) {
 	    $log.log('Dropdown is now: ', open);
 	  };
+	  
+	  $scope.closeAlert = function(index) {
+		    $scope.alerts.splice(index, 1);
+		    $window.location.reload();
+		  };
+
+	  $scope.toggleDropdown = function($event) {
+	    $event.preventDefault();
+	    $event.stopPropagation();
+	    $scope.status.isopen = !$scope.status.isopen;
+	  };
+	
+});
+
+
+gridApp.controller('seminarUserMappingController',function($scope,$http,$log,$window){
+	
+	
+	
+	 $scope.status = {
+			    isopen: true
+			  };
+	 
+	 
+	 $http.get('/admin/getAllSeminars').
+	 success(function(data, status, headers, config) {
+	 	  console.log(data);
+	 	  $scope.allSeminarData =[];
+	 	  for (i = 0,len = data.length; i < len; i++) { 
+	 		  	var selectObj = {
+	 		  			'name' : data[i].title ,
+	 		  			'id' : data[i].seminarId,
+	 		  			'maker' : data[i].title + ' ' + data[i].desc  ,
+	 		  			'ticked' : false 
+	 		  	}
+	 		  	$scope.allSeminarData.push(selectObj);
+	 		    
+	 		}
+	 	  
+	 }).
+	 error(function(data, status, headers, config) {
+	 console.log("Failure");
+	 });
+	 
+	 
+	 $http.get('/admin/getAllUsers').
+	 success(function(data, status, headers, config) {
+	 	  console.log(data);
+	 	  $scope.allUsersData =[];
+	 	  for (i = 0,len = data.length; i < len; i++) { 
+	 		  	var selectObj = {
+	 		  			'name' : data[i].firstName ,
+	 		  			'id' : data[i].id,
+	 		  			'maker' : data[i].firstName + ' ' + data[i].lastName  ,
+	 		  			'ticked' : false 
+	 		  	}
+	 		  	$scope.allUsersData.push(selectObj);
+	 		    
+	 		}
+	 	  
+	 }).
+	 error(function(data, status, headers, config) {
+	 console.log("Failure");
+	 });
+	 
+	 $scope.allRolesData = [];
+	 
+	 $http.get('/admin/getAllRoles').
+	  success(function(data, status, headers, config) {
+		  console.log(data);
+		  for (i = 0,len = data.length; i < len; i++) { 
+			  	var selectObj = {
+			  			'name' : data[i].roleName ,
+			  			'id' : data[i].id,
+			  			'maker' : data[i].roleName  ,
+			  			'ticked' : false 
+			  	}
+			  	$scope.allRolesData.push(selectObj);
+			    
+			}
+	  }).
+	  error(function(data, status, headers, config) {
+	  console.log("Failure");
+	  });
+	 $scope.alerts = [
+	                  
+	                ];
+	
+	 
+	 $scope.addSeminarRoleMapping = function(){
+		 
+		 var seminarIds =[];
+		 var roleId =[];
+		 var userId =[]; 
+		 
+		 angular.forEach( $scope.selectedSeminar, function( value, key ) {    
+			 seminarIds.push(value.id)
+			});
+		 
+		 angular.forEach( $scope.selectedRoles, function( value, key ) {    
+			    roleId.push(value.id)
+			});
+		 
+		 angular.forEach( $scope.selectedUsers, function( value, key ) {    
+			 userId.push(value.id);
+			});
+		 
+		 var inputMap = {
+				 'seminarIds':seminarIds,
+				 'roleIds' : roleId,
+				 'userIds' : userId
+		 };
+		 
+		 console.log(JSON.stringify(inputMap));
+		 
+		 $http.post('/admin/addSeminarUserRoleMapping', JSON.stringify(inputMap)).
+        success(function(result, status, headers, config) {
+       	 $scope.alerts.push({ type: 'success', msg: 'Seminar Role User Mapping completed successfullly !!' });
+      	  	 console.log('Success ');
+        }).
+        error(function(result, status, headers, config) {
+       	 $scope.alerts.push({ type: 'danger', msg: 'Seminar Role User Mapping failed !!' });
+          // called asynchronously if an error occurs
+          // or server returns response with an error status.
+        });
+	 }
+	 
+	 
+	$scope.addUserToRole = function(){
+		console.log('allRoles: '+angular.toJson($scope.allRolesObjects));
+	};
+	$scope.toggled = function(open) {
+	    $log.log('Dropdown is now: ', open);
+	  };
+	  
+	  $scope.closeAlert = function(index) {
+		    $scope.alerts.splice(index, 1);
+		    $window.location.reload();
+		  };
 
 	  $scope.toggleDropdown = function($event) {
 	    $event.preventDefault();

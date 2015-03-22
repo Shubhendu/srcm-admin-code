@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -15,7 +17,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -32,7 +36,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 import org.srcm.gems.regapp.web.util.DonationAccountType;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 /**
@@ -50,6 +54,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 	@NamedQuery(name="Seminar.seminarHasRegistrants", query="SELECT count(semReg) FROM SeminarRegistrant semReg where semReg.seminarOrig.seminarId = :semId"),
 	@NamedQuery(name="Seminar.getSeminarByID", query="SELECT sem FROM Seminar sem where sem.seminarId = :semId")
 })
+@JsonIgnoreProperties({"seminarCustomFields","seminarRegistrants","countryEntry","countryObj","seminarUserRoleMappings","userRoles"})
 public class Seminar implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -163,10 +168,26 @@ public class Seminar implements Serializable {
 	private Country countryObj;
 	
 	@OneToMany(mappedBy="seminar")
-	@JsonManagedReference
+//	@JsonBackReference
 	private Set<SeminarUserRoleMapping> seminarUserRoleMappings;
 	
-    public Seminar() {
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(name = "SEMINAR_USER_ROLE_MAPPING",
+        joinColumns = @JoinColumn(name = "SEMINAR_ID"),
+        inverseJoinColumns = @JoinColumn(name = "USER_ID"))
+    @MapKeyJoinColumn(name = "ROLE_ID")
+    private Map<Role, User> userRoles = new HashMap<Role, User>();
+	
+    public Map<Role, User> getUserRoles() {
+		return userRoles;
+	}
+
+	public void setUserRoles(Map<Role, User> userRoles) {
+		this.userRoles.clear();
+		this.userRoles.putAll(userRoles);
+	}
+
+	public Seminar() {
     }
 
 	public Long getSeminarId() {

@@ -1,14 +1,19 @@
 package org.srcm.gems.regapp.dao;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.srcm.gems.regapp.domain.Role;
+import org.srcm.gems.regapp.domain.Seminar;
+import org.srcm.gems.regapp.domain.SeminarUserRoleMapping;
 import org.srcm.gems.regapp.domain.User;
 
 @Repository("rolesDao")
@@ -108,6 +113,30 @@ public class RolesDAOImpl implements RolesDAO{
 			role.getUsers().remove(user);
 			em.persist(role);
 			em.flush();
+	}
+
+	@Override
+	@Transactional
+	public void addSeminarUserRoleMapping(int seminarId, int roleId, int userId) {
+		
+		Long semId = Long.valueOf(seminarId);
+//		em.getTransaction().begin();
+		Seminar seminar = (Seminar) em.createQuery("select s from Seminar s where s.seminarId=:seminarId")
+	             .setParameter("seminarId", semId)
+	             .getSingleResult();
+		Role role = (Role) em.createQuery("select r from Role r where r.id=:roleId")
+	             .setParameter("roleId", roleId)
+	             .getSingleResult();
+
+		User user = (User) em.createQuery("select u from User u where u.id=:userId")
+				.setParameter("userId", userId)
+				.getSingleResult();
+		Map<Role,User> userRoleMap = new HashMap<Role,User>();
+		userRoleMap.put(role, user);
+		seminar.setUserRoles(userRoleMap);
+		em.persist(seminar);
+//		em.getTransaction().commit();
+		em.flush();
 	}
 	
 }
