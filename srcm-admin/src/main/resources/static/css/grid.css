@@ -1,0 +1,9 @@
+.grid {
+  width: 900px;
+  height: 365px;
+  text-align: center;
+}
+
+.grid-center-align {
+    text-align: center;
+}

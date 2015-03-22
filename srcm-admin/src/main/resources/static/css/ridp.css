@@ -1,0 +1,24 @@
+.datepicker {
+ cursor: pointer
+}
+
+#loadingDiv {
+   margin: 50px 220px;
+}
+
+.ssapCAError {
+ background: #FFF8AF;
+ border: 1px solid #BFBA91;
+ border-radius: 0.32em;
+ margin-bottom: 5px;
+ padding: 3px;
+ display: inline-block;
+}
+
+.errorIcon {
+ background: #EA5200;
+ color: #FFFFFF;
+ font-weight: bold;
+ margin: 0 5px;
+ padding: 0 5px;
+}

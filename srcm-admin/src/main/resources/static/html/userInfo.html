@@ -1,0 +1,72 @@
+<h1>Primary Contact Information</h1>
+
+<div class="gutter10">
+	<div class="header margin10-b">
+		<h4>Start Your Application</h4>
+	</div>
+	
+	<div class="control-group" >
+		<label class="control-label">First Name <img alt="required" src="images/requiredAsterix.png" /></label>
+		<div class="controls">
+			<input type="text" class="input-large" ng-model="userInfo.firstName" name="page3FirstName" required ng-pattern="/^[A-Za-z'\s]{1,45}$/" />
+			<div class="ssapCAError" ng-show="ridpForm.page3FirstName.$dirty && ridpForm.page3FirstName.$error.required"><em class="errorIcon">!</em>This field is required.</div>
+			<div class="ssapCAError" ng-show="ridpForm.page3FirstName.$dirty && ridpForm.page3FirstName.$error.pattern"><em class="errorIcon">!</em>Please enter a valid first name.</div>
+		</div>
+	</div>
+	
+	<div class="control-group">
+		<label class="control-label">Last Name <img alt="required" src="images/requiredAsterix.png"/></label>
+		<div class="controls">
+			<input type="text" class="input-large" ng-model="userInfo.lastName" name="page3LastName" required ng-pattern="/^[A-Za-z'\-\s]{1,45}$/" />
+			<div class="ssapCAError" ng-show="ridpForm.page3LastName.$dirty && ridpForm.page3LastName.$error.required"><em class="errorIcon">!</em>This field is required.</div>
+			<div class="ssapCAError" ng-show="ridpForm.page3LastName.$dirty && ridpForm.page3LastName.$error.pattern"><em class="errorIcon">!</em>Please enter a valid first name.</div>
+		</div>
+	</div>
+
+
+	<div class="control-group">
+		<label class="control-label">Date of Birth <img alt="required" src="images/requiredAsterix.png"/></label>
+		<div class="controls">
+			<div ssap-datepicker class="input-append date">
+				<input type="text" class="input-medium" name="page3DOB" ng-model="userInfo.dob" required ui-mask="99/99/9999" model-view-value="true" /> 
+				<span class="add-on"><i class="icon-calendar"></i></span>
+			</div>
+			<div class="ssapCAError" ng-show="ridpForm.page3DOB.$dirty && ridpForm.page3DOB.$error.required"><em class="errorIcon">!</em>This field is required.</div>
+		</div>
+	</div>
+	
+
+	
+	<div class="header margin10-b">
+		<h4>Primary Contact Home Address</h4>
+	</div>
+	
+	<div class="control-group">
+		<label class="control-label">Street Address (No P.O. Box) <img alt="required" src="images/requiredAsterix.png"/></label>
+		<div class="controls">
+			<input type="text" class="input-large" id="page3HomeStreet" name="page3HomeStreet" ng-model="userInfo.homeStreetAddress" required ng-pattern="/^[A-Za-z0-9\.\s]{5,75}$/" />
+			<div class="ssapCAError" ng-show="ridpForm.page3HomeStreet.$dirty && ridpForm.page3HomeStreet.$error.required"><em class="errorIcon">!</em>This field is required.</div>
+			<div class="ssapCAError" ng-show="ridpForm.page3HomeStreet.$dirty && ridpForm.page3HomeStreet.$error.pattern"><em class="errorIcon">!</em>Please enter a valid street address.</div>
+		</div>
+	</div>
+
+	
+	<div class="control-group">
+		<label class="control-label">City <img alt="required" src="images/requiredAsterix.png"/></label>
+		<div class="controls">
+			<input type="text" class="input-large" id="page3HomeCity" name="page3HomeCity" ng-model="userInfo.homeCity" required ng-pattern="/^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/" />
+			<div class="ssapCAError" ng-show="ridpForm.page3HomeCity.$dirty && ridpForm.page3HomeCity.$error.required"><em class="errorIcon">!</em>This field is required.</div>
+			<div class="ssapCAError" ng-show="ridpForm.page3HomeCity.$dirty && ridpForm.page3HomeCity.$error.pattern"><em class="errorIcon">!</em>Please enter a valid city.</div>
+		</div>
+	</div>
+	
+	<div class="control-group">
+		<label class="control-label">Zip <img alt="required" src="images/requiredAsterix.png"/></label>
+		<div class="controls">
+			<input type="text" ui-mask="99999" id="page3HomeZip" name="page3HomeZip" class="input-large" ng-model="userInfo.homeZipCode" required />
+			<div class="ssapCAError" ng-show="ridpForm.page3HomeZip.$dirty && ridpForm.page3HomeZip.$error.required"><em class="errorIcon">!</em>This field is required.</div>
+		</div>
+	</div>
+
+</div>
+

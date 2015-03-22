@@ -1,0 +1,19 @@
+<h1>CONFIRM IDENTITY</h1>
+
+<div class="gutter10">
+	<div class="header margin10-b">
+		<h4>Tell Us About Yourself</h4>
+	</div>
+	<p>Answer the questions below to confirm your identity and ensure that only you are able to access your personal information. We will not store these answers. * Indicates a required field.</p>
+	<div class="control-group" ng-repeat="question in questionInfo">
+		<p>{{question.id}}. {{question.question}}</p>						
+			 <div class="margin20-l">
+				<label class="radio" ng-repeat="answer in question.answers"> 
+					<input type="radio" required ng-model="answerInfo.answers[question.id]" name="{{question.id}}" value="{{answer.value}}">{{answer.text}}
+				</label>
+			</div>
+	</div>
+	
+
+</div>
+
